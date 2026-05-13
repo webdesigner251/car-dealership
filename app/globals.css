@@ -933,3 +933,22 @@ nav.visible {
     cursor: auto;
   }
 }
+
+
+.scene-headline {
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 1.25rem;
+  will-change: transform, opacity, filter;
+}
+
+.scene-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  will-change: transform, opacity, filter;
+}
+

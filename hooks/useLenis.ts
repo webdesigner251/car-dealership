@@ -14,51 +14,33 @@ export const useLenis = () => {
       smoothWheel: true,
     });
 
-    const handleScroll = () => {
-      ScrollTrigger.update();
-    };
+    // IMPORTANT
+    lenis.on("scroll", ScrollTrigger.update);
 
-    const handleRefresh = () => {
-      lenis.resize();
-    };
-
-    lenis.on("scroll", handleScroll);
-    ScrollTrigger.addEventListener("refresh", handleRefresh);
-
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length) {
-          lenis.scrollTo(value as number, { immediate: true });
-          return;
-        }
-
-        return lenis.scroll ?? 0;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-      pinType: document.documentElement.style.transform ? "transform" : "fixed",
-    });
-
-    let animationFrame = 0;
-    const raf = (time: number) => {
+    // GSAP RAF
+    const update = (time: number) => {
       lenis.raf(time * 1000);
-      animationFrame = requestAnimationFrame(raf);
     };
 
-    animationFrame = requestAnimationFrame(raf);
+    gsap.ticker.add(update);
+
+    gsap.ticker.lagSmoothing(0);
+
+    // REFRESH
+    const resize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("resize", resize);
 
     ScrollTrigger.refresh();
 
     return () => {
-      cancelAnimationFrame(animationFrame);
+      gsap.ticker.remove(update);
+
+      window.removeEventListener("resize", resize);
+
       lenis.destroy();
-      ScrollTrigger.removeEventListener("refresh", handleRefresh);
     };
   }, []);
 };
