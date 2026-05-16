@@ -23,7 +23,7 @@ const STEPS = [
   },
   {
     num: "03",
-    label: "Dominate",
+    label: "Dominate ",
     title: "Results. Week over week.",
     desc: "Watch conversion and gross-per-unit climb every week.",
     video: "./step-03.mp4",
