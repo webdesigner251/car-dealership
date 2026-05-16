@@ -634,11 +634,11 @@ export default function AIEnginesSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const header = section.querySelector(".ai-header");
+    const header = section.querySelector(".animate-header");
     if (!header) return;
 
     gsap.fromTo(
-      header.querySelectorAll(".ai-header-item"),
+      header.querySelectorAll(".animate-title"),
       { opacity: 0, y: 30 },
       {
         opacity: 1,
@@ -685,7 +685,7 @@ export default function AIEnginesSection() {
         {/* glow orb */}
         <div aria-hidden="true" className="absolute pointer-events-none z-0 rounded-full"
           style={{
-            top: "-15%", right: "-8%", width: "55vw", height: "55vw",
+            top: "-15%", right: "0", width: "55vw", height: "55vw",
             background: "radial-gradient(circle, rgba(180,16,29,0.13) 0%, transparent 65%)",
             animation: "orbFloat 10s ease-in-out infinite",
           }} />
@@ -700,7 +700,7 @@ export default function AIEnginesSection() {
         <div className="relative z-[2] mx-auto" style={{ maxWidth: 1300 }}>
 
           {/* header — items animated on scroll */}
-          <header className="ai-header text-center mb-[clamp(48px,8vw,80px)]">
+          <header className="animate-header text-center mb-[clamp(48px,8vw,80px)]">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
                 <span aria-hidden="true" className="w-[7px] h-[7px] rounded-full inline-block"
                 style={{ background: "#B30E1C", animation: "dotPulse 2.2s ease-in-out infinite" }} />
@@ -708,10 +708,10 @@ export default function AIEnginesSection() {
             </div>
 
 
-            <h2 className="ai-header-item m-0 text-white"
+            <h2 className="animate-title m-0 text-white"
               style={{
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(52px,9vw,112px)",
+                fontSize: "clamp(52px,9vw,82px)",
                 lineHeight: 0.97,
                 letterSpacing: "0.02em",
               }}>
@@ -719,7 +719,7 @@ export default function AIEnginesSection() {
               <span style={{ color: "#b4101d" }}>Five Engines.</span>
             </h2>
 
-            <p className="ai-header-item mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
+            <p className="animate-title mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
               style={{ color: "rgba(255,255,255,0.42)" }}>
               Auto Forge connects your DMS, CRM, inventory feeds, and customer
               touchpoints into a single intelligent ecosystem — and gives every

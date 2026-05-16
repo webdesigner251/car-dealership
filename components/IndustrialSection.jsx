@@ -606,15 +606,20 @@ export default function DealershipProblemSection() {
             >
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
                 <span aria-hidden="true" className="w-[7px] h-[7px] rounded-full inline-block"
-                style={{ background: "#white", animation: "dotPulse 2.2s ease-in-out infinite" }} />
+                style={{ background: "#B30E1C", animation: "dotPulse 2.2s ease-in-out infinite" }} />
                 The Problem
               </div>
 
-              <h2 className="text-4xl font-semibold leading-tight text-white md:text-6xl md:leading-[1.1]">
-                The Old Dealership
-                <span className="relative ml-3 inline-block text-[#B30E1C]">
-                  Is Broken
-                  <span
+              <h2 className="animate-title m-0 text-white"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: "clamp(52px,9vw,82px)",
+                  lineHeight: 0.97,
+                  letterSpacing: "0.02em",
+                }}>
+                The Old Dealership {" "}
+                <span className="relative ml-3 inline-block text-[#B30E1C]">Is Broken
+                   <span
                     ref={lineRef}
                     className="absolute -bottom-3 left-0 h-[3px] w-full rounded-full bg-[linear-gradient(90deg,transparent,#B30E1C,transparent)] bg-[length:200%_100%]"
                   />

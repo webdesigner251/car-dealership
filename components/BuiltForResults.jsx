@@ -1,146 +1,121 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+const stats = [
+  {
+    value: 127,
+    prefix: "",
+    suffix: "+",
+    label: "Dealerships Powered",
+  },
+  {
+    value: 34,
+    prefix: "+",
+    suffix: "%",
+    label: "Avg Lead Conversion Lift",
+  },
+  {
+    value: 18,
+    prefix: "$",
+    suffix: "M",
+    label: "Revenue Generated",
+  },
+];
 
-export default function BuiltForResults() {
-  const sectionRef = useRef(null);
+function Counter({ target, prefix = "", suffix = "" }) {
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Section fade + lift
-      gsap.from(".bfr-section", {
-        opacity: 0,
-        y: 80,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".bfr-section",
-          start: "top 80%",
-        },
-      });
+    let start = 0;
+    const duration = 2000;
+    const increment = target / 100;
 
-      // Terminal lines stagger
-      gsap.from(".terminal-line", {
-        opacity: 0,
-        x: -20,
-        stagger: 0.15,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".bfr-section",
-          start: "top 75%",
-        },
-      });
+    const timer = setInterval(() => {
+      start += increment;
 
-      // Counter animation
-      const counters = document.querySelectorAll(".counter");
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, duration / 100);
 
-      counters.forEach((counter) => {
-        const target = +counter.getAttribute("data-target");
-
-        ScrollTrigger.create({
-          trigger: counter,
-          start: "top 90%",
-          once: true,
-          onEnter: () => {
-            let obj = { val: 0 };
-
-            gsap.to(obj, {
-              val: target,
-              duration: 2,
-              ease: "power2.out",
-              onUpdate: () => {
-                counter.innerText = Math.floor(obj.val);
-              },
-            });
-          },
-        });
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    return () => clearInterval(timer);
+  }, [target]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="bfr-section relative w-full bg-black text-white py-28 overflow-hidden"
-    >
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="grid-bg" />
-      </div>
+    <span>
+      {prefix}
+      {count}
+      {suffix}
+    </span>
+  );
+}
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+export default function BuiltForResults() {
+  return (
+    <section className="relative min-h-screen bg-black text-white overflow-hidden flex items-center justify-center px-6 py-24">
+      
+      {/* Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[60px_60px]" />
+
+      {/* Glow Rings */}
+      <div className="absolute w-[900px] h-[900px] border border-[#b4101d]/10 rounded-full animate-pulse" />
+      <div className="absolute w-[650px] h-[650px] border border-[#b4101d]/10 rounded-full" />
+
+      <div className="relative z-10 max-w-7xl w-full text-center">
         
-        {/* Terminal Header */}
-        <div className="mb-10">
-          <p className="text-green-400 font-mono text-sm terminal-line">
-            &gt; initializing performance engine...
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold mt-3 terminal-line">
-            Built for <span className="text-green-400">Results</span>
-          </h2>
-          <p className="text-gray-400 mt-4 max-w-xl terminal-line">
-            High-performance dealership systems engineered for conversion, speed, and automation.
-          </p>
-        </div>
+        {/* header — items animated on scroll */}
+          <header className="animate-header text-center mb-[clamp(48px,8vw,80px)]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
+                <span aria-hidden="true" className="w-[7px] h-[7px] rounded-full inline-block"
+                style={{ background: "#B30E1C", animation: "dotPulse 2.2s ease-in-out infinite" }} />
+                Built for Results
+            </div>
 
-        {/* Stats Grid */}
-        <div className="grid md:grid-cols-3 gap-10">
-          
-          <div className="bg-[#0a0a0a] border border-green-500/20 p-6 rounded-xl shadow-[0_0_40px_rgba(0,255,100,0.08)]">
-            <p className="text-green-400 font-mono">conversion_rate</p>
-            <h3 className="text-4xl font-bold mt-3">
-              <span className="counter" data-target="320">0</span>%
-            </h3>
-            <p className="text-gray-500 mt-2">increase in lead conversion</p>
-          </div>
+            <h2 className="animate-title m-0 text-white"
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: "clamp(52px,9vw,82px)",
+                lineHeight: 0.97,
+                letterSpacing: "0.02em",
+              }}>
+              The numbers don&apos;t{" "}
+              <span style={{ color: "#b4101d" }}>whisper.</span>
+            </h2>
 
-          <div className="bg-[#0a0a0a] border border-green-500/20 p-6 rounded-xl shadow-[0_0_40px_rgba(0,255,100,0.08)]">
-            <p className="text-green-400 font-mono">system_speed</p>
-            <h3 className="text-4xl font-bold mt-3">
-              <span className="counter" data-target="98">0</span>%
-            </h3>
-            <p className="text-gray-500 mt-2">faster workflow execution</p>
-          </div>
+            <p className="animate-title mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
+              style={{ color: "rgba(255,255,255,0.42)" }}>
+              Auto Forge connects your DMS, CRM, inventory feeds, and customer
+              touchpoints into a single intelligent ecosystem — and gives every
+              team in your store a smarter weapon.
+            </p>
+          </header>
 
-          <div className="bg-[#0a0a0a] border border-green-500/20 p-6 rounded-xl shadow-[0_0_40px_rgba(0,255,100,0.08)]">
-            <p className="text-green-400 font-mono">automation_level</p>
-            <h3 className="text-4xl font-bold mt-3">
-              <span className="counter" data-target="87">0</span>%
-            </h3>
-            <p className="text-gray-500 mt-2">processes fully automated</p>
-          </div>
+        {/* Stats Cards */}
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-10 transition-all duration-500 hover:-translate-y-4 hover:border-[#b4101d]/50 hover:shadow-[0_0_50px_rgba(255,106,0,0.15)]"
+            >
+              <div className="text-6xl md:text-7xl font-black">
+                <Counter
+                  target={stat.value}
+                  prefix={stat.prefix}
+                  suffix={stat.suffix}
+                />
+              </div>
 
+              <p className="mt-5 text-xs uppercase tracking-[0.35em] text-zinc-500">
+                {stat.label}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Background Animation Styles */}
-      <style jsx>{`
-        .grid-bg {
-          width: 100%;
-          height: 100%;
-          background-image:
-            linear-gradient(rgba(0,255,100,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,255,100,0.05) 1px, transparent 1px);
-          background-size: 60px 60px;
-          animation: moveGrid 12s linear infinite;
-        }
-
-        @keyframes moveGrid {
-          0% {
-            transform: translateY(0px);
-          }
-          100% {
-            transform: translateY(60px);
-          }
-        }
-      `}</style>
     </section>
   );
 }

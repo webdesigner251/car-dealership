@@ -125,6 +125,20 @@ body {
 /* Typewriter cursor blink */
 .animate-type-blink { animation: typeBlink 0.7s step-end infinite; }
 
+/* Marquee brand ticker */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee { position: relative; }
+
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
 /* Badge dot pulse */
 .animate-pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
 
@@ -318,4 +332,28 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 10 1000;
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dasharray: 10 1000;
+    stroke-dashoffset: -1000;
+  }
+}
+
+.animate-line {
+  animation: dash 8s linear infinite;
+}
+
+.animate-line-slow {
+  animation: dash 12s linear infinite;
+}
+
+.animate-line-fast {
+  animation: dash 6s linear infinite;
 }

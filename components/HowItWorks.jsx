@@ -75,7 +75,7 @@ export default function HowItWorks() {
             onUpdate: (self) => {
               const step = Math.min(
                 STEPS.length - 1,
-                Math.round(self.progress * (STEPS.length - 1))
+                Math.round(self.progress * (STEPS.length - 1)),
               );
 
               if (step !== currentStep) {
@@ -106,7 +106,7 @@ export default function HowItWorks() {
               duration: 1,
               ease: "power3.out",
             },
-            index
+            index,
           );
 
           if (index !== STEPS.length - 1) {
@@ -118,7 +118,7 @@ export default function HowItWorks() {
                 duration: 1,
                 ease: "power3.inOut",
               },
-              index + 0.7
+              index + 0.7,
             );
           }
         });
@@ -180,40 +180,48 @@ export default function HowItWorks() {
       className="bg-[#050507] text-black overflow-hidden"
     >
       {/* HEADER */}
-        <div className="relative z-2 mx-auto">
-
-          {/* header — items animated on scroll */}
-          <div className="ai-header text-center mb-[clamp(48px,8vw,80px)]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
-                <span aria-hidden="true" className="w-[7px] h-[7px] rounded-full inline-block"
-                style={{ background: "#B30E1C", animation: "dotPulse 2.2s ease-in-out infinite" }} />
-                The Platform
-            </div>
-
-
-            <h2 className="ai-header-item m-0 text-white"
+      <div className="relative z-2 mx-auto">
+        {/* header — items animated on scroll */}
+        <div className="animate-header text-center mb-[clamp(48px,8vw,80px)]">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
+            <span
+              aria-hidden="true"
+              className="w-[7px] h-[7px] rounded-full inline-block"
               style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(52px,9vw,112px)",
-                lineHeight: 0.97,
-                letterSpacing: "0.02em",
-              }}>
-              One Forge.{" "}
-              <span style={{ color: "#b4101d" }}>Five Engines.</span>
-            </h2>
-
-            <p className="ai-header-item mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
-              style={{ color: "rgba(255,255,255,0.42)" }}>
-              Auto Forge connects your DMS, CRM, inventory feeds, and customer
-              touchpoints into a single intelligent ecosystem — and gives every
-              team in your store a smarter weapon.
-            </p>
+                background: "#B30E1C",
+                animation: "dotPulse 2.2s ease-in-out infinite",
+              }}
+            />
+            How It Works
           </div>
+
+          <h2
+            className="animate-title m-0 text-white"
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "clamp(52px,9vw,82px)",
+              lineHeight: 0.97,
+              letterSpacing: "0.02em",
+            }}
+          >
+            From Plug-In to
+            <span style={{ color: "#b4101d" }}> Profit</span> in Three Steps.
+          </h2>
+
+          <p
+            className="animate-title mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
+            style={{ color: "rgba(255,255,255,0.42)" }}
+          >
+            Auto Forge connects your DMS, CRM, inventory feeds, and customer
+            touchpoints into a single intelligent ecosystem — and gives every
+            team in your store a smarter weapon.
+          </p>
         </div>
+      </div>
 
       {/* TRACK */}
 
-      <div ref={trackRef} className="relative">
+      <div ref={trackRef} className="hidden md:block relative">
         <div className="grid h-screen grid-cols-2 overflow-hidden">
           {/* LEFT VIDEO */}
 
@@ -263,9 +271,7 @@ export default function HowItWorks() {
                   key={i}
                   ref={(el) => (dotRefs.current[i] = el)}
                   className={`w-2 rounded-full transition-all duration-500 ${
-                    i === 0
-                      ? "h-8 bg-[#b4101d]"
-                      : "h-2 bg-black/20"
+                    i === 0 ? "h-8 bg-[#b4101d]" : "h-2 bg-black/20"
                   }`}
                 />
               ))}
@@ -280,11 +286,14 @@ export default function HowItWorks() {
                   ref={(el) => (contentRefs.current[index] = el)}
                   className="absolute inset-0 flex flex-col justify-center px-10 lg:px-24"
                 >
-                  <span className="mb-5 text-[11px] uppercase tracking-[0.3em] text-[#b4101d]">
+                  <span className="mb-5 text-lg uppercase tracking-[0.3em] text-[#b4101d]">
                     Step {step.num}
                   </span>
 
-                  <h3 className="mb-4 text-[clamp(4rem,7vw,7rem)] font-semibold uppercase leading-[0.9] tracking-tight">
+                  <h3
+                    className="mb-4 text-[clamp(4rem,7vw,7rem)] font-medium uppercase leading-[0.9] tracking-normal"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                  >
                     {step.label}
                   </h3>
 
@@ -321,17 +330,13 @@ export default function HowItWorks() {
                 Step {step.num}
               </span>
 
-              <h3 className="mb-3 text-5xl font-semibold uppercase leading-none">
+              <h3 className="mb-3 text-5xl font-semibold uppercase leading-none text-white">
                 {step.label}
               </h3>
 
-              <h4 className="mb-5 text-2xl">
-                {step.title}
-              </h4>
+              <h4 className="mb-5 text-2xl text-white">{step.title}</h4>
 
-              <p className="text-black/60 leading-8">
-                {step.desc}
-              </p>
+              <p className="text-white leading-8">{step.desc}</p>
             </div>
           </div>
         ))}

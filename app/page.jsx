@@ -4,9 +4,9 @@ import IndustrialSection from "@/components/IndustrialSection"
 import AIEnginesSection from "@/components/AIEnginesSection";
 import HowItWorks from "@/components/HowItWorks";
 import BuiltForResults from "@/components/BuiltForResults";
-// import Testimonials from "@/components/Testimonials";
-// import CTA from "@/components/Cta";
-// import Footer from "@/components/Fooster";
+import CTA from "@/components/Cta";
+import Testimonials from "@/components/Testimonials";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -17,9 +17,9 @@ export default function Home() {
       <AIEnginesSection/>
       <HowItWorks/>
       <BuiltForResults/>
-      {/* <Testimonials/> */}
-      {/* <CTA/> */}
-      {/* <Footer/> */}
+      <Testimonials/>
+      <CTA/>
+      <Footer/>
     </>
   );
 }
