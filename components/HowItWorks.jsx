@@ -12,21 +12,21 @@ const STEPS = [
     label: "Connect",
     title: "Plug-in in 48 hours.",
     desc: "Auto Forge connects to your DMS, CRM, website, and inventory feeds in 48 hours.",
-    video: "/step-01.mp4",
+    video: "./step-01.mp4",
   },
   {
     num: "02",
     label: "Forge",
     title: "AI learns your store.",
     desc: "Our models ingest inventory and customer history.",
-    video: "/step-02.mp4",
+    video: "./step-02.mp4",
   },
   {
     num: "03",
     label: "Dominate",
     title: "Results. Week over week.",
     desc: "Watch conversion and gross-per-unit climb every week.",
-    video: "/step-03.mp4",
+    video: "./step-03.mp4",
   },
 ];
 

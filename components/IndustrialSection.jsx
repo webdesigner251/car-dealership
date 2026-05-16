@@ -631,8 +631,8 @@ export default function DealershipProblemSection() {
 
             <ContainerInset className="max-h-[850px] w-full py-6">
               <HeroVideo
-                src="/video-2.mp4"
-                data-src="/video-2.mp4"
+                src="./video-2.mp4"
+                data-src="./video-2.mp4"
               />
             </ContainerInset>
             <ContainerAnimated

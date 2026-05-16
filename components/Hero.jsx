@@ -119,7 +119,7 @@ export default function Hero() {
             style={{ width: 1, height: 1 }}
             aria-hidden="true"
           >
-            <source src="/hero.mp4" type="video/mp4" />
+            <source src="./hero.mp4" type="video/mp4" />
           </video>
 
           {/* Canvas — zero-stutter frame rendering */}
