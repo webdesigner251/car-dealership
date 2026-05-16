@@ -211,12 +211,12 @@ export default function Hero() {
                   className="flex items-center justify-center gap-4 flex-wrap mt-10 pointer-events-auto"
                   style={{ opacity: 0, transform: "translateY(18px)" }}
                 >
-                  <button className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-lg text-[13px] font-bold tracking-[0.12em] uppercase text-white bg-orange border border-orange cursor-pointer transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 [box-shadow:0_0_30px_rgba(255,85,0,0.3),inset_0_1px_0_rgba(255,255,255,0.15)] hover:[box-shadow:0_0_55px_rgba(255,85,0,0.5),0_8px_30px_rgba(255,85,0,0.25)]">
+                  <button className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-lg text-[13px] font-bold tracking-[0.12em] uppercase text-white bg-[#B30E1C] border border-[#B30E1C] cursor-pointer transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 [box-shadow:0_0_30px_rgba(255,85,0,0.3),inset_0_1px_0_rgba(255,255,255,0.15)] hover:[box-shadow:0_0_55px_rgba(255,85,0,0.5),0_8px_30px_rgba(255,85,0,0.25)]">
                     <span className="btn-shine-track" />
                     Explore Platform
                     <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </button>
-                  <button className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-lg text-[13px] font-bold tracking-[0.12em] uppercase text-white/85 bg-white/4 border border-white/15 backdrop-blur-md cursor-pointer transition-[box-shadow,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-orange/50 hover:text-white [box-shadow:inset_0_1px_0_rgba(255,255,255,0.06)] hover:[box-shadow:0_0_25px_rgba(255,85,0,0.12),inset_0_1px_0_rgba(255,255,255,0.1)]">
+                  <button className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-lg text-[13px] font-bold tracking-[0.12em] uppercase text-white/85 bg-white/4 border border-white/15 backdrop-blur-md cursor-pointer transition-[box-shadow,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[#B30E1C]/50 hover:text-white [box-shadow:inset_0_1px_0_rgba(255,255,255,0.06)] hover:[box-shadow:0_0_25px_rgba(255,85,0,0.12),inset_0_1px_0_rgba(255,255,255,0.1)]">
                     View Solutions
                     <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </button>
@@ -234,8 +234,8 @@ export default function Hero() {
             <span className="text-[9px] tracking-[0.32em] uppercase text-white/30 font-grotesk">
               Scroll to explore
             </span>
-            <div className="w-[26px] h-[42px] border border-orange/40 rounded-[20px] flex justify-center pt-[7px] [box-shadow:0_0_12px_rgba(255,85,0,0.1)]">
-              <div className="animate-scroll-thumb w-1 h-2 bg-orange rounded-full [box-shadow:0_0_8px_#B30E1C]" />
+            <div className="w-[26px] h-[42px] border border-[#B30E1C]/40 rounded-[20px] flex justify-center pt-[7px] [box-shadow:0_0_12px_rgba(255,85,0,0.1)]">
+              <div className="animate-scroll-thumb w-1 h-2 bg-[#B30E1C] rounded-full [box-shadow:0_0_8px_#B30E1C]" />
             </div>
           </div>
 

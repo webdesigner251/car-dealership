@@ -93,13 +93,14 @@ export const useScrollVideo = (
       sceneCache.forEach(({ scene, sceneEl, subEl, btnEl }) => {
         if (!sceneEl) return;
         const { enter, exit } = scene;
-        const exitStart = exit - 0.05;
+        // Final scene never exits — it stays visible until the pin releases
+        const exitStart = scene.isFinal ? Infinity : exit - 0.05;
 
         let sceneOp = 0;
-        if (p >= enter && p < exit) {
+        if (p >= enter) {
           if (p < enter + 0.03) {
             sceneOp = gsap.utils.mapRange(enter, enter + 0.03, 0, 1, p);
-          } else if (p >= exitStart) {
+          } else if (!scene.isFinal && p >= exitStart) {
             sceneOp = gsap.utils.mapRange(exitStart, exit, 1, 0, p);
           } else {
             sceneOp = 1;
@@ -134,10 +135,10 @@ export const useScrollVideo = (
           const subEnter = enter + 0.10;
           const subEnd   = enter + 0.17;
           let subOp = 0, subTy = 14;
-          if (p >= subEnter && p < exitStart) {
+          if (p >= subEnter && (scene.isFinal || p < exitStart)) {
             subOp = p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 0, 1, p) : 1;
             subTy = p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 14, 0, p) : 0;
-          } else if (p >= exitStart && p < exit) {
+          } else if (!scene.isFinal && p >= exitStart && p < exit) {
             subOp = gsap.utils.mapRange(exitStart, exit, 1, 0, p);
             subTy = gsap.utils.mapRange(exitStart, exit, 0, -14, p);
           }
