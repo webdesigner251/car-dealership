@@ -21,7 +21,7 @@ export default function Preloader() {
         <div className="relative flex h-48 w-48 items-center justify-center rounded-full border border-[#b4101d]/20 bg-[#0b0b0d]">
           <div className="absolute inset-0 rounded-full border border-white/10 opacity-40 animate-spin" />
           <img
-            src="/logo.svg"
+            src="./logo.svg"
             alt="Auto Forge logo"
             className="relative h-30 w-30 object-contain"
           />
