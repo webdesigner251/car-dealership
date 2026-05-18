@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Logo from "@/public/logo.svg";
+import ScrollToTop from "@/components/Scrolltotop";
 
 const NAV_LINKS = ["Privacy", "Terms", "Platform", "Careers"];
 
@@ -49,6 +50,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full border-t border-white/8 bg-site-black">
+        <ScrollToTop />
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 sm:flex-row sm:justify-between">
 
         {/* ── LEFT — Logo + brand name ── */}
