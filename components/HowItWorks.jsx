@@ -177,7 +177,7 @@ export default function HowItWorks() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#050507] text-black overflow-hidden"
+      className="relative bg-[#050507] text-black overflow-hidden"
     >
       {/* HEADER */}
       <div className="relative z-2 mx-auto">

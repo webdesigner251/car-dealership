@@ -17,8 +17,8 @@ export default function Home() {
       <AIEnginesSection/>
       <HowItWorks/>
       <BuiltForResults/>
-      <Testimonials/>
       <CTA/>
+      <Testimonials/>
       <Footer/>
     </>
   );

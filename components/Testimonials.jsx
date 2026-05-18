@@ -203,7 +203,7 @@ const Testimonials = ({
         <div className="relative space-y-8 lg:min-h-[220vh]">
           {testimonials.map((testimonial, index) => (
             <StickyTestimonialCard
-              key={testimonial.name}
+              key={`${testimonial.name}-${index}`}
               testimonial={testimonial}
               index={index}
             />
