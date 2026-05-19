@@ -11,334 +11,503 @@ const STEPS = [
     num: "01",
     label: "Connect",
     title: "Plug-in in 48 hours.",
-    desc: "Auto Forge connects to your DMS, CRM, website, and inventory feeds in 48 hours.",
+    desc: "Auto Forge connects to your DMS, CRM, website, and inventory feeds in 48 hours — zero downtime, zero dev work.",
     video: "./step-01.mp4",
+    carImg: "/car4.png",
+    entryFrom: "left",
   },
   {
     num: "02",
     label: "Forge",
     title: "AI learns your store.",
-    desc: "Our models ingest inventory and customer history.",
+    desc: "Our models ingest your inventory, customer history, and market data to build a brain that's uniquely yours.",
     video: "./step-02.mp4",
+    carImg: "/car2.png",
+    entryFrom: "right",
   },
   {
     num: "03",
-    label: "Dominate ",
+    label: "Dominate",
     title: "Results. Week over week.",
-    desc: "Watch conversion and gross-per-unit climb every week.",
+    desc: "Watch conversion rates and gross-per-unit climb every single week as the AI compounds its learning.",
     video: "./step-03.mp4",
+    carImg: "/car3.png",
+    entryFrom: "left",
   },
 ];
 
-export default function HowItWorks() {
-  const sectionRef = useRef(null);
-  const trackRef = useRef(null);
+// ----------------------------------------------------------------------
+//                    REAL CAR IMAGE
+// ----------------------------------------------------------------------
+function RealCar({ src, flip = false }) {
+  return (
+    <div style={{ width: "100%", position: "relative" }}>
+      {/* Ground glow */}
+      <div style={{
+        position: "absolute", bottom: 0, left: "10%", right: "10%",
+        height: 24, background: "radial-gradient(ellipse, rgba(180,16,29,0.35) 0%, transparent 70%)",
+        filter: "blur(10px)", pointerEvents: "none",
+      }} />
+      <img
+        src={src}
+        alt="car"
+        style={{
+          width: "100%",
+          height: "auto",
+          objectFit: "contain",
+          display: "block",
+          transform: flip ? "scaleX(-1)" : "none",
+          filter: "drop-shadow(0 8px 32px rgba(0,0,0,0.7))",
+        }}
+      />
+    </div>
+  );
+}
 
-  const videoWrapRefs = useRef([]);
-  const videoRefs = useRef([]);
-
-  const contentRefs = useRef([]);
-  const dotRefs = useRef([]);
-
-  const [currentStep, setCurrentStep] = useState(0);
+// ----------------------------------------------------------------------
+//                    INDIVIDUAL STEP
+// ----------------------------------------------------------------------
+function AnimatedStep({ step, index }) {
+  const stepRef = useRef(null);
+  const carContainerRef = useRef(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
-    const mm = gsap.matchMedia();
+    const section = stepRef.current;
+    const carWrap = carContainerRef.current;
+    const contentWrap = contentRef.current;
+    if (!section || !carWrap || !contentWrap) return;
 
-    mm.add("(min-width: 768px)", () => {
-      const ctx = gsap.context(() => {
-        /* INITIAL */
-        gsap.set(videoWrapRefs.current, {
-          opacity: 0,
-          scale: 1.15,
-          filter: "blur(10px)",
-        });
+    const fromLeft = step.entryFrom === "left";
+    const startX = fromLeft ? "-120vw" : "120vw";
+    const endX = fromLeft ? "120vw" : "-120vw";
 
-        gsap.set(videoWrapRefs.current[0], {
-          opacity: 1,
-          scale: 1,
-          filter: "blur(0px)",
-        });
+    gsap.set(carWrap, { x: startX });
+    gsap.set(contentWrap, { opacity: 0, y: 16 });
 
-        videoRefs.current[0]?.play();
-
-        /* MAIN TIMELINE */
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: trackRef.current,
-            start: "top top",
-            end: `+=${STEPS.length * 120}%`,
-            scrub: 1.2,
-            pin: true,
-            anticipatePin: 1,
-
-            onUpdate: (self) => {
-              const step = Math.min(
-                STEPS.length - 1,
-                Math.round(self.progress * (STEPS.length - 1)),
-              );
-
-              if (step !== currentStep) {
-                changeStep(step);
-              }
-            },
-          },
-        });
-
-        /* CONTENT ANIMATION */
-        STEPS.forEach((_, index) => {
-          if (!contentRefs.current[index]) return;
-
-          const content = contentRefs.current[index];
-
-          if (index !== 0) {
-            gsap.set(content, {
-              opacity: 0,
-              y: 120,
-            });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "+=200%",
+        scrub: 1.2,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const prog = self.progress;
+          if (prog >= 0.28 && prog <= 0.72) {
+            const fade = Math.min(1, (prog - 0.28) / 0.18);
+            gsap.set(contentWrap, { opacity: fade, y: 16 * (1 - fade) });
+          } else {
+            gsap.set(contentWrap, { opacity: 0, y: 16 });
           }
-
-          tl.to(
-            content,
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1,
-              ease: "power3.out",
-            },
-            index,
-          );
-
-          if (index !== STEPS.length - 1) {
-            tl.to(
-              content,
-              {
-                opacity: 0,
-                y: -120,
-                duration: 1,
-                ease: "power3.inOut",
-              },
-              index + 0.7,
-            );
-          }
-        });
-
-        function changeStep(step) {
-          setCurrentStep(step);
-
-          /* DOTS */
-          dotRefs.current.forEach((dot, i) => {
-            if (!dot) return;
-
-            if (i === step) {
-              dot.classList.add("bg-[#b4101d]", "h-8");
-              dot.classList.remove("bg-black/20", "h-2");
-            } else {
-              dot.classList.remove("bg-[#b4101d]", "h-8");
-              dot.classList.add("bg-black/20", "h-2");
-            }
-          });
-
-          /* VIDEOS */
-          videoWrapRefs.current.forEach((wrap, i) => {
-            if (!wrap) return;
-
-            if (i === step) {
-              gsap.to(wrap, {
-                opacity: 1,
-                scale: 1,
-                filter: "blur(0px)",
-                duration: 1.2,
-                ease: "power3.out",
-              });
-
-              videoRefs.current[i]?.play();
-            } else {
-              gsap.to(wrap, {
-                opacity: 0,
-                scale: 1.15,
-                filter: "blur(10px)",
-                duration: 1,
-                ease: "power3.out",
-              });
-
-              videoRefs.current[i]?.pause();
-            }
-          });
-        }
-      }, sectionRef);
-
-      return () => ctx.revert();
+        },
+      },
     });
 
-    return () => mm.revert();
-  }, [currentStep]);
+    // drive in to x:0 (rest), hold, drive out
+    tl.to(carWrap, { x: "0%", duration: 0.35, ease: "power2.out" }, 0).to(
+      carWrap,
+      { x: endX, duration: 0.35, ease: "power2.inOut" },
+      0.65,
+    );
+
+    return () => {
+      tl.kill();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.vars?.trigger === section) st.kill();
+      });
+    };
+  }, [step.entryFrom]);
+
+  const fromLeft = step.entryFrom === "left";
+
+  return (
+    <section
+      ref={stepRef}
+      className="relative h-screen w-full overflow-hidden border-b border-white/5"
+    >
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/*
+        Layout when rested:
+          fromLeft  (01,03): car came from left → rests RIGHT side,  content on LEFT
+          !fromLeft (02):    car came from right → rests LEFT side,  content on RIGHT
+
+        Car wrapper starts off-screen, animates to its rest position.
+        Content fades in once car is near rest.
+      */}
+
+      {/*
+        Both car + content grouped together in center as a flex row.
+        fromLeft: [CONTENT] [rope] [CAR]  — car enters from left, rests right of content
+        !fromLeft: [CAR] [rope] [CONTENT] — car enters from right, rests left of content
+      */}
+
+      {/* Outer wrapper — centers the whole group, car animates inside */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ pointerEvents: "none" }}
+      >
+        <div
+          className="flex items-center"
+          style={{
+            gap: 0,
+            flexDirection: fromLeft ? "row" : "row-reverse",
+            width: "clamp(700px, 88vw, 1200px)",
+          }}
+        >
+          {/* CONTENT — fades in */}
+          <div
+            ref={contentRef}
+            style={{
+              opacity: 0,
+              flex: "0 0 clamp(340px, 52%, 620px)",
+              padding: "0 clamp(12px, 2vw, 28px)",
+            }}
+          >
+            <div className="w-full flex flex-col gap-5">
+              {/* Video */}
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl shadow-black/50">
+                <video
+                  src={step.video}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  style={{
+                    width: "100%",
+                    aspectRatio: "16/10",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+                <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#b4101d]/30 to-transparent" />
+                <div
+                  className="absolute bottom-3 right-4 font-bebas text-white/10 leading-none pointer-events-none select-none"
+                  style={{ fontSize: "clamp(3rem, 5vw, 5rem)" }}
+                >
+                  {step.num}
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 14,
+                    left: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "rgba(180,16,29,0.15)",
+                    border: "1px solid rgba(180,16,29,0.4)",
+                    borderRadius: 999,
+                    padding: "4px 12px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: "50%",
+                      background: "#b4101d",
+                      display: "inline-block",
+                      boxShadow: "0 0 6px rgba(180,16,29,0.8)",
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 11,
+                      letterSpacing: "0.22em",
+                      color: "rgba(255,255,255,0.75)",
+                    }}
+                  >
+                    Step {step.num}
+                  </span>
+                </div>
+              </div>
+              {/* Text */}
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="block w-8 h-px bg-[#b4101d]" />
+                  <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-[#b4101d]">
+                    Step {step.num}
+                  </span>
+                </div>
+                <h3
+                  className="font-bebas leading-none text-white mb-3"
+                  style={{
+                    fontSize: "clamp(2.8rem, 5vw, 4.2rem)",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  {step.label}
+                </h3>
+                <div className="w-full h-px bg-white/10 mb-4" />
+                <h4
+                  className="text-white font-medium mb-2 leading-snug"
+                  style={{ fontSize: "clamp(1rem, 1.6vw, 1.35rem)" }}
+                >
+                  {step.title}
+                </h4>
+                <p
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.75,
+                    color: "rgba(255,255,255,0.52)",
+                    margin: 0,
+                  }}
+                >
+                  {step.desc}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ROPE connector */}
+          <div
+            style={{
+              flexShrink: 0,
+              width: "clamp(32px, 4vw, 64px)",
+              height: 6,
+              position: "relative",
+            }}
+          >
+            <svg
+              width="100%"
+              height="6"
+              viewBox="0 0 64 6"
+              preserveAspectRatio="none"
+            >
+              <line
+                x1="0"
+                y1="3"
+                x2="64"
+                y2="3"
+                stroke="#555"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+              <line
+                x1="0"
+                y1="3"
+                x2="64"
+                y2="3"
+                stroke="#aaa"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+              />
+              <line
+                x1="0"
+                y1="3"
+                x2="64"
+                y2="3"
+                stroke="rgba(255,255,255,0.25)"
+                strokeWidth="0.8"
+              />
+            </svg>
+          </div>
+
+          {/* CAR — animates in */}
+          <div
+            ref={carContainerRef}
+            style={{
+              flex: "0 0 clamp(260px, 38%, 480px)",
+              willChange: "transform",
+            }}
+          >
+            <RealCar src={step.carImg} flip={!fromLeft} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ----------------------------------------------------------------------
+//                          MAIN EXPORT
+// ----------------------------------------------------------------------
+export default function HowItWorks() {
+  const sectionRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const titles = document.querySelectorAll(".hiw-title");
+    gsap.fromTo(
+      titles,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      },
+    );
+  }, []);
+
+  if (isMobile) {
+    return (
+      <section className="relative bg-[#050507] text-white overflow-hidden py-24">
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
+              <span
+                className="w-[7px] h-[7px] rounded-full inline-block"
+                style={{ background: "#B30E1C" }}
+              />
+              How It Works
+            </div>
+            <h2
+              className="font-bebas text-white m-0 hiw-title"
+              style={{ fontSize: "clamp(52px,9vw,96px)", lineHeight: 0.95 }}
+            >
+              From Plug-In to <span style={{ color: "#b4101d" }}>Profit</span>{" "}
+              <br /> in Three Steps.
+            </h2>
+            <p
+              className="mt-6 text-base leading-[1.75] max-w-[500px] mx-auto hiw-title"
+              style={{ color: "rgba(255,255,255,0.42)" }}
+            >
+              Auto Forge connects your DMS, CRM, inventory feeds, and customer
+              touchpoints into a single intelligent ecosystem.
+            </p>
+          </div>
+          <div className="space-y-20">
+            {STEPS.map((step) => (
+              <div key={step.num}>
+                <video
+                  src={step.video}
+                  muted
+                  loop
+                  autoPlay
+                  playsInline
+                  className="w-full rounded-xl mb-6"
+                  style={{ aspectRatio: "16/10" }}
+                />
+                <span
+                  className="mb-3 block text-[11px] uppercase tracking-[0.35em]"
+                  style={{ color: "#b4101d" }}
+                >
+                  Step {step.num}
+                </span>
+                <h3
+                  className="font-bebas text-white uppercase leading-none mb-2"
+                  style={{ fontSize: "clamp(3rem,12vw,5rem)" }}
+                >
+                  {step.label}
+                </h3>
+                <h4 className="text-xl font-medium text-white mb-3">
+                  {step.title}
+                </h4>
+                <p
+                  className="text-[15px] leading-[1.8]"
+                  style={{ color: "rgba(255,255,255,0.45)" }}
+                >
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#050507] text-black overflow-hidden"
+      className="relative bg-[#050507] text-white overflow-hidden"
     >
-      {/* HEADER */}
-      <div className="relative z-2 mx-auto">
-        {/* header — items animated on scroll */}
-        <div className="animate-header text-center mb-[clamp(48px,8vw,80px)]">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl">
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+      <div
+        className="absolute top-0 right-0 pointer-events-none"
+        style={{
+          width: 600,
+          height: 600,
+          background:
+            "radial-gradient(circle, rgba(180,16,29,0.08) 0%, transparent 70%)",
+          transform: "translate(30%, -30%)",
+        }}
+      />
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(180,16,29,0.4), transparent)",
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
+        }}
+      />
+
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="text-center pt-32 pb-16">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#B30E1C]/10 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-white backdrop-blur-xl hiw-title">
             <span
-              aria-hidden="true"
               className="w-[7px] h-[7px] rounded-full inline-block"
-              style={{
-                background: "#B30E1C",
-                animation: "dotPulse 2.2s ease-in-out infinite",
-              }}
+              style={{ background: "#B30E1C" }}
             />
             How It Works
           </div>
-
           <h2
-            className="animate-title m-0 text-white"
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "clamp(52px,9vw,82px)",
-              lineHeight: 0.97,
-              letterSpacing: "0.02em",
-            }}
+            className="font-bebas text-white m-0 hiw-title"
+            style={{ fontSize: "clamp(52px,9vw,96px)", lineHeight: 0.95 }}
           >
-            From Plug-In to
-            <span style={{ color: "#b4101d" }}> Profit</span> in Three Steps.
+            From Plug-In to <span style={{ color: "#b4101d" }}>Profit</span>{" "}
+            <br /> in Three Steps.
           </h2>
-
           <p
-            className="animate-title mt-5 text-base leading-[1.65] max-w-[520px] text-center mx-auto"
+            className="mt-6 text-base leading-[1.75] max-w-[500px] mx-auto hiw-title"
             style={{ color: "rgba(255,255,255,0.42)" }}
           >
             Auto Forge connects your DMS, CRM, inventory feeds, and customer
-            touchpoints into a single intelligent ecosystem — and gives every
-            team in your store a smarter weapon.
+            touchpoints into a single intelligent ecosystem.
           </p>
         </div>
-      </div>
 
-      {/* TRACK */}
-
-      <div ref={trackRef} className="hidden md:block relative">
-        <div className="grid h-screen grid-cols-2 overflow-hidden">
-          {/* LEFT VIDEO */}
-
-          <div className="relative overflow-hidden bg-black">
-            {STEPS.map((step, index) => (
-              <div
-                key={step.num}
-                ref={(el) => (videoWrapRefs.current[index] = el)}
-                className="absolute inset-0"
-              >
-                <video
-                  ref={(el) => (videoRefs.current[index] = el)}
-                  src={step.video}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  preload="auto"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
-
-            {/* NUMBER */}
-
-            <div className="pointer-events-none absolute bottom-6 left-8 z-10 text-[clamp(6rem,12vw,12rem)] font-bold leading-none text-white/10">
-              {STEPS[currentStep].num}
-            </div>
-
-            {/* OVERLAY */}
-
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-          </div>
-
-          {/* RIGHT */}
-
-          <div className="relative overflow-hidden bg-white">
-            {/* LINE */}
-
-            <div className="absolute left-0 top-[10%] bottom-[10%] w-px bg-black/10" />
-
-            {/* DOTS */}
-
-            <div className="absolute right-8 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3">
-              {STEPS.map((_, i) => (
-                <div
-                  key={i}
-                  ref={(el) => (dotRefs.current[i] = el)}
-                  className={`w-2 rounded-full transition-all duration-500 ${
-                    i === 0 ? "h-8 bg-[#b4101d]" : "h-2 bg-black/20"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* CONTENT */}
-
-            <div className="relative h-full">
-              {STEPS.map((step, index) => (
-                <div
-                  key={step.num}
-                  ref={(el) => (contentRefs.current[index] = el)}
-                  className="absolute inset-0 flex flex-col justify-center px-10 lg:px-24"
-                >
-                  <span className="mb-5 text-lg uppercase tracking-[0.3em] text-[#b4101d]">
-                    Step {step.num}
-                  </span>
-
-                  <h3
-                    className="mb-4 text-[clamp(4rem,7vw,7rem)] font-medium uppercase leading-[0.9] tracking-normal"
-                    style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-                  >
-                    {step.label}
-                  </h3>
-
-                  <h4 className="mb-6 max-w-[500px] text-[clamp(1.3rem,2vw,2rem)] leading-[1.2] tracking-[-0.03em]">
-                    {step.title}
-                  </h4>
-
-                  <p className="max-w-[460px] text-[15px] leading-[1.9] text-black/55">
-                    {step.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* MOBILE */}
-
-      <div className="block md:hidden">
-        {STEPS.map((step) => (
-          <div key={step.num} className="border-b border-black/10">
-            <video
-              src={step.video}
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="aspect-video w-full object-cover"
-            />
-
-            <div className="px-6 py-10">
-              <span className="mb-4 block text-[11px] uppercase tracking-[0.3em] text-[#b4101d]">
-                Step {step.num}
-              </span>
-
-              <h3 className="mb-3 text-5xl font-semibold uppercase leading-none text-white">
-                {step.label}
-              </h3>
-
-              <h4 className="mb-5 text-2xl text-white">{step.title}</h4>
-
-              <p className="text-white leading-8">{step.desc}</p>
-            </div>
-          </div>
+        {/* Steps */}
+        {STEPS.map((step, idx) => (
+          <AnimatedStep key={step.num} step={step} index={idx} />
         ))}
       </div>
     </section>
