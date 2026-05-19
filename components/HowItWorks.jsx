@@ -13,7 +13,7 @@ const STEPS = [
     title: "Plug-in in 48 hours.",
     desc: "Auto Forge connects to your DMS, CRM, website, and inventory feeds in 48 hours — zero downtime, zero dev work.",
     video: "./step-01.mp4",
-    carImg: "/car4.png",
+    carImg: "./car4.png",
     entryFrom: "left",
   },
   {
@@ -22,7 +22,7 @@ const STEPS = [
     title: "AI learns your store.",
     desc: "Our models ingest your inventory, customer history, and market data to build a brain that's uniquely yours.",
     video: "./step-02.mp4",
-    carImg: "/car2.png",
+    carImg: "./car2.png",
     entryFrom: "right",
   },
   {
@@ -31,7 +31,7 @@ const STEPS = [
     title: "Results. Week over week.",
     desc: "Watch conversion rates and gross-per-unit climb every single week as the AI compounds its learning.",
     video: "./step-03.mp4",
-    carImg: "/car3.png",
+    carImg: "./car3.png",
     entryFrom: "left",
   },
 ];
