@@ -63,7 +63,7 @@ const MODULES = [
     ],
     features: ["Behavioral intent signals", "Auto-assign by rep capacity", "CRM push in real time"],
     code: `forge.leads.score({\n  source: "web",\n  priority: "hot"\n})`,
-    image: "/step1.png",
+    image: "./step1.png",
     partLabel: "Lead Engine",
   },
   {
@@ -76,7 +76,7 @@ const MODULES = [
     ],
     features: ["Automotive-trained AI", "Two-way SMS & web chat", "Live calendar booking"],
     code: `forge.chat.send({\n  to: lead.phone,\n  template: "follow_up"\n})`,
-    image: "/step2.png",
+    image: "./step2.png",
     partLabel: "Chat Engine",
   },
   {
@@ -89,7 +89,7 @@ const MODULES = [
     ],
     features: ["Market comp scanning", "Automated repricing rules", "Margin floor protection"],
     code: `forge.pricing.reprice({\n  vin: "1G6KD57...",\n  strategy: "velocity"\n})`,
-    image: "/step3.png",
+    image: "./step3.png",
     partLabel: "Pricing Engine",
   },
   {
@@ -102,7 +102,7 @@ const MODULES = [
     ],
     features: ["OBD mileage triggers", "Declined service follow-up", "Multi-point inspection AI"],
     code: `forge.service.notify({\n  trigger: "overdue_oil",\n  segment: "loyal"\n})`,
-    image: "/step4.png",
+    image: "./step4.png",
     partLabel: "Service Engine",
   },
   {
@@ -115,7 +115,7 @@ const MODULES = [
     ],
     features: ["Real-time KPI dashboard", "Forecast vs quota tracking", "Slack / SMS anomaly alerts"],
     code: `forge.iq.kpi({\n  metric: "gross_per_unit",\n  range: "ytd"\n})`,
-    image: "/step5.png",
+    image: "./step5.png",
     partLabel: "Analytics Engine",
   },
 ];
