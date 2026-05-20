@@ -58,7 +58,7 @@ export default function BuiltForResults() {
 
     const st = ScrollTrigger.create({
       trigger: header,
-      start: "top 80%",
+      start: "top 85%",
       onEnter: () => {
         gsap.to(badge, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
         gsap.to(title, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.12 });
@@ -81,7 +81,7 @@ export default function BuiltForResults() {
 
     const st = ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: "top 70%",
+      start: "top 80%",
       onEnter: () => {
         gsap.to(cards, {
           opacity: 1, y: 0,
@@ -103,7 +103,7 @@ export default function BuiltForResults() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen bg-black text-white overflow-hidden flex items-center justify-center px-6 py-24"
+      className="relative min-h-screen bg-black text-white flex items-center justify-center px-6 py-24"
     >
       {/* Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
