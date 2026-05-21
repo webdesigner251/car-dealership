@@ -288,28 +288,29 @@ export default function HowItWorks() {
                 </svg>
 
                 {/* Floating Cars (3D effect outside bounds) */}
-                {STEPS.map((step, i) => {
-                  const isActive = activeStep === i;
-                  // Per-car bottom offset to align wheels consistently
-                  const bottomOffset = i === 1 ? "-25%" : "-15%";
-                  return (
-                    <img
-                      key={i}
-                      src={step.carImg}
-                      alt={step.label}
-                      className="absolute right-[-10%] w-[115%] max-w-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
-                      style={{
-                        bottom: bottomOffset,
-                        opacity: isActive ? 1 : 0,
-                        transform: isActive ? "scale(1)" : "scale(0.95)",
-                        filter: isActive
-                          ? "drop-shadow(0 40px 60px rgba(0,0,0,0.8)) brightness(1.1)"
-                          : "drop-shadow(0 10px 20px rgba(0,0,0,0.5)) brightness(0.5)",
-                        pointerEvents: isActive ? "auto" : "none",
-                      }}
-                    />
-                  );
-                })}
+               {STEPS.map((step, i) => {
+  const isActive = activeStep === i;
+
+  const bottomOffsets = ["-15%", "-0%", "-0%"];
+
+  return (
+    <img
+      key={i}
+      src={step.carImg}
+      alt={step.label}
+      className="absolute right-[-10%] w-[115%] max-w-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
+      style={{
+        bottom: bottomOffsets[i],
+        opacity: isActive ? 1 : 0,
+        transform: isActive ? "scale(1)" : "scale(0.95)",
+        filter: isActive
+          ? "drop-shadow(0 40px 60px rgba(0,0,0,0.8)) brightness(1.1)"
+          : "drop-shadow(0 10px 20px rgba(0,0,0,0.5)) brightness(0.5)",
+        pointerEvents: isActive ? "auto" : "none",
+      }}
+    />
+  );
+})}
               </div>
             </div>
           </div>
