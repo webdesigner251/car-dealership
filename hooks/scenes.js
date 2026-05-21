@@ -21,7 +21,6 @@ export const SCENES = [
     enter: 0.52,
     exit: 0.74,
     headline: "Predict Revenue Before It Happens",
-    sub: "Know what your customer wants before they walk through the door.",
   },
   {
     id: "scene-3",

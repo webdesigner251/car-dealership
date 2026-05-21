@@ -200,7 +200,7 @@ const Testimonials = ({
         </div>
 
         {/* Sticky stacked cards */}
-        <div className="relative space-y-8 lg:min-h-[220vh]">
+        <div className="relative space-y-4 lg:min-h-[183vh]">
           {testimonials.map((testimonial, index) => (
             <StickyTestimonialCard
               key={`${testimonial.name}-${index}`}
@@ -211,7 +211,7 @@ const Testimonials = ({
         </div>
       </div>
 
-      <div className="mt-12 mx-auto w-full max-w-7xl px-4 lg:px-0 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] py-4">
+      <div className="mx-auto w-full max-w-7xl px-4 lg:px-0 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] py-4">
         <div className="marquee overflow-hidden">
           <div className="marquee-track inline-flex items-center gap-10 whitespace-nowrap px-4 text-sm uppercase tracking-[0.28em] text-white/80">
             {marqueeBrands.concat(marqueeBrands).map((brand, index) => (

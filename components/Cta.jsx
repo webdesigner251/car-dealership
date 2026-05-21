@@ -110,6 +110,7 @@ export default function CTA() {
         minHeight: "100vh",
         background: "#050507",
         fontFamily: "'Space Grotesk', sans-serif",
+        marginTop: "-50px"
       }}
     >
       {/* Background grid */}

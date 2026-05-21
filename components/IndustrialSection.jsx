@@ -363,10 +363,10 @@
 
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Lenis from "@studio-freight/lenis"
+import { motion, useInView } from "motion/react"
 import {
   CircleAlert,
   Database,
@@ -376,102 +376,69 @@ import { ContainerAnimated,
   ContainerInset,
   ContainerScroll,
   ContainerSticky,
-  HeroButton,
   HeroVideo } from "@/components/animated-video-on-scroll"
 
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function DealershipProblemSection() {
-  const sectionRef = useRef(null)
-  const titleRef = useRef(null)
-  const cardsRef = useRef([])
-  const centerRef = useRef(null)
-  const lineRef = useRef(null)
+// Animated counter that counts from 0 to target when in view
+function AnimatedNumber({ value, suffix = "", prefix = "" }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px" })
+  const [display, setDisplay] = useState(0)
+
+  // Parse numeric part from value like "67%", "$2.3M", "+38%"
+  const numericStr = value.replace(/[^0-9.]/g, "")
+  const target = parseFloat(numericStr)
+  const isDecimal = numericStr.includes(".")
 
   useEffect(() => {
-    if (!sectionRef.current) return
+    if (!isInView) return
+    let start = 0
+    const duration = 1800
+    const startTime = performance.now()
 
-    const ctx = gsap.context((self) => {
-      const q = self.selector
+    const tick = (now) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      // ease out expo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
+      const current = eased * target
+      setDisplay(isDecimal ? parseFloat(current.toFixed(1)) : Math.floor(current))
+      if (progress < 1) requestAnimationFrame(tick)
+    }
 
-      gsap.from(q(".hero-badge"), {
-        y: 40,
-        autoAlpha: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: q(".hero-badge"),
-          start: "top 85%",
-          once: true,
-        },
-      })
+    requestAnimationFrame(tick)
+  }, [isInView, target, isDecimal])
 
-      gsap.from(q(".hero-title"), {
-        y: 120,
-        autoAlpha: 0,
-        duration: 1.4,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: q(".hero-title"),
-          start: "top 85%",
-          once: true,
-        },
-      })
+  return (
+    <span ref={ref}>
+      {prefix}{display}{isDecimal ? "" : ""}{suffix}
+    </span>
+  )
+}
 
-      gsap.from(q(".hero-text"), {
-        y: 80,
-        autoAlpha: 0,
-        duration: 1.2,
-        delay: 0.2,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: q(".hero-text"),
-          start: "top 85%",
-          once: true,
-        },
-      })
+// Reconstruct the display value with animated number
+function AnimatedValue({ raw }) {
+  // patterns: "67%"  "$2.3M"  "+38%"
+  if (raw.startsWith("$")) {
+    const num = raw.replace(/[^0-9.]/g, "")
+    const suffix = raw.replace(/[$0-9.]/g, "")
+    return <><span>$</span><AnimatedNumber value={raw} suffix={suffix} /></>
+  }
+  if (raw.startsWith("+")) {
+    const suffix = raw.replace(/[^a-zA-Z%]/g, "")
+    return <><span>+</span><AnimatedNumber value={raw} suffix={suffix} /></>
+  }
+  const suffix = raw.replace(/[0-9.]/g, "")
+  return <AnimatedNumber value={raw} suffix={suffix} />
+}
 
-      gsap.from(q(".problem-card"), {
-        y: 100,
-        autoAlpha: 0,
-        stagger: 0.15,
-        duration: 1.2,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: q(".cards-wrapper"),
-          start: "top 80%",
-          once: true,
-        },
-      })
-
-      gsap.from(q(".stats-card"), {
-        x: 100,
-        autoAlpha: 0,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: q(".stats-wrapper"),
-          start: "top 85%",
-          once: true,
-        },
-      })
-
-      gsap.to(q(".floating-glow"), {
-        y: -30,
-        repeat: -1,
-        yoyo: true,
-        duration: 3,
-        stagger: 0.5,
-        ease: "sine.inOut",
-      })
-
-      ScrollTrigger.refresh()
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
+export default function DealershipProblemSection() {
+  const titleRef = useRef(null)
+  const lineRef = useRef(null)
+  const statsRef = useRef(null)
+  const statsInView = useInView(statsRef, { once: true, margin: "-10% 0px" })
 
   const stats = [
     {
@@ -665,21 +632,23 @@ export default function DealershipProblemSection() {
                       Revenue Opportunity
                     </p>
                     <h3 className="mt-1 text-4xl font-bold text-white">
-                      +38%
+                      <AnimatedValue raw="+38%" />
                     </h3>
                   </div>
                 </div>
               </div>
 
-              <div className="max-w-7xl mx-auto mt-8 grid items-center gap-5 lg:grid-cols-[1fr_1fr_1fr]">
+              <div ref={statsRef} className="max-w-7xl mx-auto mt-8 grid items-center gap-5 lg:grid-cols-[1fr_1fr_1fr]">
 
                   {stats.map((item, index) => {
                     const Icon = item.icon
 
                     return (
-                      <div
+                      <motion.div
                         key={index}
-                        ref={(el) => (cardsRef.current[index] = el)}
+                        initial={{ opacity: 0, y: 60 }}
+                        animate={statsInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.7, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
                         className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition-all duration-500 hover:border-[#B30E1C]/40 hover:bg-[#B30E1C]/[0.06]"
                       >
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.18),transparent_45%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -691,7 +660,7 @@ export default function DealershipProblemSection() {
 
                           <div>
                             <h3 className="text-5xl font-bold tracking-tight text-white md:text-6xl">
-                              {item.value}
+                              <AnimatedValue raw={item.value} />
                             </h3>
 
                             <p className="mt-4 max-w-sm text-lg leading-8 text-zinc-400">
@@ -699,7 +668,7 @@ export default function DealershipProblemSection() {
                             </p>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     )
                   })}
                 {/* <div className="space-y-6">

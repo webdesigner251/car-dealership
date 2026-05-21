@@ -103,7 +103,7 @@ export default function BuiltForResults() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen bg-black text-white flex items-center justify-center px-6 py-24"
+      className="relative min-h-screen bg-black text-white flex items-center justify-center px-6 py-24 lg:py-0"
     >
       {/* Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />

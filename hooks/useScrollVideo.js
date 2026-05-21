@@ -8,8 +8,8 @@ import { SCENES } from "@/hooks/scenes";
 gsap.registerPlugin(ScrollTrigger);
 
 export const useScrollVideo = (
-  videoId        = "hero-video",
-  canvasId       = "hero-canvas",
+  videoId = "hero-video",
+  canvasId = "hero-canvas",
   scrollDistance = 7000,
 ) => {
   const initialized = useRef(false);
@@ -18,15 +18,21 @@ export const useScrollVideo = (
     if (initialized.current) return;
     initialized.current = true;
 
-    const video  = document.getElementById(videoId);
+    const video = document.getElementById(videoId);
     const canvas = document.getElementById(canvasId);
     if (!video || !canvas) return;
 
-    const ctx = canvas.getContext("2d", { willReadFrequently: false });
+    const ctx = canvas.getContext("2d", {
+      alpha: false,
+      willReadFrequently: true,
+    });
+    if (ctx) {
+      ctx.imageSmoothingEnabled = true;
+    }
 
     // ── Canvas sizing ────────────────────────────────────────────────────
     const resizeCanvas = () => {
-      canvas.width  = window.innerWidth;
+      canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resizeCanvas();
@@ -34,31 +40,40 @@ export const useScrollVideo = (
 
     // ── Cover-fit draw ───────────────────────────────────────────────────
     const drawFrame = () => {
-      if (!video.videoWidth) return;
+      if (!video.videoWidth || !ctx) return;
       const vr = video.videoWidth / video.videoHeight;
       const cr = canvas.width / canvas.height;
-      let w = canvas.width, h = canvas.height, x = 0, y = 0;
-      if (vr > cr) { w = h * vr; x = (canvas.width - w) / 2; }
-      else         { h = w / vr; y = (canvas.height - h) / 2; }
+      let w = canvas.width,
+        h = canvas.height,
+        x = 0,
+        y = 0;
+      if (vr > cr) {
+        w = h * vr;
+        x = (canvas.width - w) / 2;
+      } else {
+        h = w / vr;
+        y = (canvas.height - h) / 2;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(video, x, y, w, h);
     };
 
     // ── State ────────────────────────────────────────────────────────────
-    let rawTarget = 0;   // progress set by ScrollTrigger
-    let smoothP   = 0;   // lerped progress — drives everything
-    let rafId     = null;
-    let rvfcId    = null; // requestVideoFrameCallback handle
+    let rawTarget = 0; // progress set by ScrollTrigger
+    let smoothP = 0; // lerped progress — drives everything
+    let rafId = null;
+    let rvfcId = null; // requestVideoFrameCallback handle
     let isSeeking = false;
 
     // ── DOM refs ─────────────────────────────────────────────────────────
-    const overlay    = document.getElementById("cinematic-overlay");
+    const overlay = document.getElementById("cinematic-overlay");
     const scrollHint = document.getElementById("scroll-hint");
 
     const sceneCache = SCENES.map((scene, i) => ({
       scene,
       sceneEl: document.getElementById(scene.id),
-      subEl:   document.getElementById(`scene-${i}-sub`),
-      btnEl:   document.getElementById(`scene-${i}-btns`),
+      subEl: document.getElementById(`scene-${i}-sub`),
+      btnEl: document.getElementById(`scene-${i}-btns`),
     }));
 
     // ── requestVideoFrameCallback — draw ONLY when a new frame is ready ──
@@ -79,15 +94,13 @@ export const useScrollVideo = (
     // Runs every RAF tick from smoothP — independent of video decode state
     const updateUI = (p) => {
       if (overlay) {
-        overlay.style.opacity = p < 0.2
-          ? 0.52
-          : gsap.utils.mapRange(0.2, 1.0, 0.52, 0.15, p);
+        overlay.style.opacity =
+          p < 0.2 ? 0.52 : gsap.utils.mapRange(0.2, 1.0, 0.52, 0.15, p);
       }
 
       if (scrollHint) {
-        scrollHint.style.opacity = p < 0.05
-          ? gsap.utils.mapRange(0, 0.05, 1, 0, p)
-          : 0;
+        scrollHint.style.opacity =
+          p < 0.05 ? gsap.utils.mapRange(0, 0.05, 1, 0, p) : 0;
       }
 
       sceneCache.forEach(({ scene, sceneEl, subEl, btnEl }) => {
@@ -106,57 +119,68 @@ export const useScrollVideo = (
             sceneOp = 1;
           }
         }
-        sceneEl.style.opacity    = sceneOp;
+        sceneEl.style.opacity = sceneOp;
         sceneEl.style.visibility = sceneOp > 0.005 ? "visible" : "hidden";
 
         const revealStart = enter;
-        const revealEnd   = enter + 0.14;
-        const charEls     = sceneEl.querySelectorAll(".char");
-        const total       = charEls.length;
+        const revealEnd = enter + 0.14;
+        const charEls = sceneEl.querySelectorAll(".char");
+        const total = charEls.length;
 
         charEls.forEach((charEl, ci) => {
           const charPos = total > 1 ? ci / (total - 1) : 0;
-          const front   = gsap.utils.clamp(
-            0, 1,
-            gsap.utils.mapRange(revealStart, revealEnd, 0, 1, p)
+          const front = gsap.utils.clamp(
+            0,
+            1,
+            gsap.utils.mapRange(revealStart, revealEnd, 0, 1, p),
           );
           const dist = front - charPos;
           let charOpacity;
-          if (p < revealStart)      charOpacity = 0.12;
+          if (p < revealStart) charOpacity = 0.12;
           else if (p <= revealEnd) {
-            if (dist < 0)           charOpacity = 0.12;
-            else if (dist < 0.08)   charOpacity = gsap.utils.mapRange(0, 0.08, 1.0, 0.85, dist);
-            else                    charOpacity = 1.0;
-          } else                    charOpacity = 1.0;
+            if (dist < 0) charOpacity = 0.12;
+            else if (dist < 0.08)
+              charOpacity = gsap.utils.mapRange(0, 0.08, 1.0, 0.85, dist);
+            else charOpacity = 1.0;
+          } else charOpacity = 1.0;
           charEl.style.color = `rgba(255,255,255,${charOpacity})`;
         });
 
         if (subEl) {
-          const subEnter = enter + 0.10;
-          const subEnd   = enter + 0.17;
-          let subOp = 0, subTy = 14;
+          const subEnter = enter + 0.1;
+          const subEnd = enter + 0.17;
+          let subOp = 0,
+            subTy = 14;
           if (p >= subEnter && (scene.isFinal || p < exitStart)) {
-            subOp = p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 0, 1, p) : 1;
-            subTy = p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 14, 0, p) : 0;
+            subOp =
+              p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 0, 1, p) : 1;
+            subTy =
+              p < subEnd ? gsap.utils.mapRange(subEnter, subEnd, 14, 0, p) : 0;
           } else if (!scene.isFinal && p >= exitStart && p < exit) {
             subOp = gsap.utils.mapRange(exitStart, exit, 1, 0, p);
             subTy = gsap.utils.mapRange(exitStart, exit, 0, -14, p);
           }
-          subEl.style.opacity   = subOp;
+          subEl.style.opacity = subOp;
           subEl.style.transform = `translateY(${subTy}px)`;
         }
 
         if (scene.isFinal && btnEl) {
           const btnEnter = enter + 0.14;
-          const btnEnd   = enter + 0.21;
-          const btnOp = p >= btnEnter
-            ? p < btnEnd ? gsap.utils.mapRange(btnEnter, btnEnd, 0, 1, p) : 1
-            : 0;
-          btnEl.style.opacity   = btnOp;
+          const btnEnd = enter + 0.21;
+          const btnOp =
+            p >= btnEnter
+              ? p < btnEnd
+                ? gsap.utils.mapRange(btnEnter, btnEnd, 0, 1, p)
+                : 1
+              : 0;
+          btnEl.style.opacity = btnOp;
           btnEl.style.transform = `translateY(${(1 - btnOp) * 18}px)`;
         }
       });
     };
+
+    let lastSeekTime = 0;
+    const seekThreshold = 1 / 24; // only seek when progress changes enough for a new frame
 
     // ── Master RAF loop ──────────────────────────────────────────────────
     // Lerps smoothP and seeks video. Drawing happens separately via
@@ -165,15 +189,15 @@ export const useScrollVideo = (
       // Lerp toward scroll target — 0.12 = responsive but smooth
       smoothP += (rawTarget - smoothP) * 0.12;
 
-      // Seek video — no threshold, seek every frame when value changes.
-      // The browser queues seeks and decodes asynchronously.
-      // requestVideoFrameCallback fires when the frame is actually ready.
       if (video.duration) {
-        const t = smoothP * video.duration;
-        // Only assign if meaningfully different — avoids redundant seeks
-        // but threshold is tiny (half a frame at 60fps) so no visible jump
-        if (Math.abs(video.currentTime - t) > 0.008) {
-          video.currentTime = t;
+        const targetTime = smoothP * video.duration;
+        const timeDelta = Math.abs(lastSeekTime - targetTime);
+
+        // Only seek when the desired time moves far enough to justify it.
+        // This avoids repeated micro-seeks that can make playback feel choppy.
+        if (timeDelta > seekThreshold) {
+          lastSeekTime = targetTime;
+          video.currentTime = targetTime;
         }
       }
 
@@ -223,7 +247,12 @@ export const useScrollVideo = (
     });
 
     if (scrollHint) {
-      gsap.to(scrollHint, { opacity: 1, duration: 1.4, delay: 1.0, ease: "power2.out" });
+      gsap.to(scrollHint, {
+        opacity: 1,
+        duration: 1.4,
+        delay: 1.0,
+        ease: "power2.out",
+      });
     }
 
     ScrollTrigger.refresh();
