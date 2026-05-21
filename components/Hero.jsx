@@ -199,7 +199,7 @@ export default function Hero() {
               {/* Sub text */}
               <p
                 id={`scene-${i}-sub`}
-                className="font-grotesk text-[clamp(0.88rem,1.4vw,1.05rem)] font-light text-white max-w-lg leading-[1.78] tracking-[0.01em]"
+                className="font-grotesk text-[clamp(0.88rem,1.4vw,2rem)] font-light text-white max-w-lg leading-[1.78] tracking-[0.01em] font-[600]"
               >
                 {scene.sub}
               </p>

@@ -22,6 +22,7 @@ const STEPS = [
     desc: "Our models ingest your inventory, customer history, and market data to build a brain that's uniquely yours.",
     video: "./step-02.mp4",
     carImg: "./car2.png",
+    carClass: "mt-5"
   },
   {
     num: "03",
@@ -289,13 +290,16 @@ export default function HowItWorks() {
                 {/* Floating Cars (3D effect outside bounds) */}
                 {STEPS.map((step, i) => {
                   const isActive = activeStep === i;
+                  // Per-car bottom offset to align wheels consistently
+                  const bottomOffset = i === 1 ? "-25%" : "-15%";
                   return (
                     <img
                       key={i}
                       src={step.carImg}
                       alt={step.label}
-                      className="absolute bottom-[-15%] right-[-10%] w-[115%] max-w-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
+                      className="absolute right-[-10%] w-[115%] max-w-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] z-30"
                       style={{
+                        bottom: bottomOffset,
                         opacity: isActive ? 1 : 0,
                         transform: isActive ? "scale(1)" : "scale(0.95)",
                         filter: isActive
